@@ -1,6 +1,7 @@
 const express = require("express");
 const app = express();
 
+app.use(express.json());
 let persons = [
   {
     name: "Arto Hellas",
@@ -70,9 +71,30 @@ app.get("/api/persons/:id", (req, res) => {
 
 app.delete("/api/persons/:id", (req, res) => {
   let id = Number(req.params.id);
-  let person = persons.filter((person) => person.id !== id);
+  persons = persons.filter((person) => person.id !== id);
   res.status(204).end();
 });
+
+const generateId = () => {
+  Math.floor(Math.random() * 9999);
+};
+
+app.post("/api/persons", (req, res) => {
+  const body = req.body;
+  if (!body.name) {
+    return res.status(400).json({
+      error: "Missing Content",
+    });
+  }
+  let newPerson = {
+    name: body.name,
+    id: generateId(),
+    number: body.number,
+  };
+  persons = persons.concat(newPerson);
+  res.json(newPerson);
+});
+
 const PORT = 3001;
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
