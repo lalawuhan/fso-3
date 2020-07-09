@@ -48,16 +48,25 @@ app.get("/", (req, res) => {
   res.send("<h1>Hi</h1>");
 });
 
-app.get("/api/persons", (req, res) => {
-  res.json(persons);
-});
 app.get("/info", (req, res) => {
   const date = new Date();
   res.send(`Phonebook has info for ${persons.length} people.
-${date}
-  `);
+  ${date}
+    `);
 });
 
+app.get("/api/persons", (req, res) => {
+  res.json(persons);
+});
+
+app.get("/api/persons/:id", (req, res) => {
+  let id = Number(req.params.id);
+  let person = persons.find((person) => person.id === id);
+  if (person) {
+    res.json(person);
+  }
+  res.status(404).end();
+});
 const PORT = 3001;
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
