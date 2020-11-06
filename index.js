@@ -76,10 +76,12 @@ app.post("/api/persons", (req, res) => {
     number: body.number,
   });
 
-  person.save().then((result) => {
+  person.save()
+  .then(result => {
     console.log(`added ${result.name} number ${result.number} to phonebook`);
     res.json(result)
-  });
+  })
+  .catch(error => next(error))
 });
 
 app.put('/api/persons/:id', (req, res, next) => {
